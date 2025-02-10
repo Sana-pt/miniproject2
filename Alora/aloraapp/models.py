@@ -40,7 +40,7 @@ class Bookings(models.Model):
     user_id=models.ForeignKey(User,on_delete=models.CASCADE)
     hall_id=models.ForeignKey(Halls,on_delete=models.CASCADE)
     booking_date=models.DateField(auto_now_add=True)
-    payment_status=models.CharField(max_length=100,default='Pending')
+    payment_status=models.CharField(max_length=100,default='pending')
     photography=models.CharField(max_length=100,null=True,blank=True)
     food_value=models.BooleanField(null=True,blank=True)
     food=models.ForeignKey(Food,on_delete=models.CASCADE,null=True,blank=True)

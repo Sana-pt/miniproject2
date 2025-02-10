@@ -24,7 +24,7 @@
             <th>photography cost</th>
             <th>total payment</th>
             <th>payment status</th>
-        </tr>
+        </tr> 
         {% for i in x %}
         <tr>
             <td>{{i.event_date}}</td> 
@@ -33,22 +33,26 @@
             <td>{{i.hall_id.location}}</td>
             <td>{{i.booking_date}}</td> 
             <td>{{i.photography}}</td> 
-             <td>{{i.food.food_name}}</td>
+            <td>{{i.food.food_name}}</td>
             <td>{{i.decoration.decoration_name}}</td>
             <td>{{i.photography_cost}}</td>
             <td>{{i.total_payment}}</td>
             <td>
-                <form action="{% url 'stripe_payments' id=i.id %}">
-                    {% csrf_token %}
-                    {% if i.event_status == 'Accept' and i.payment_status == 'Pending' %}
-                    <input type="submit" value="PAY">
+                
+                    {% if i.event_status == 'Accept' and i.payment_status == 'pending' %}
+                    <form action="{% url 'stripe_payments' id=i.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="PAY">
+                    </form>
                     {% elif i.payment_status == 'completed' %}
                     <p>completed</p>
                     {% elif i.event_status == 'Reject' %}
                     <span>Pending</span>
+                    {% else %}
+                    <span>pending</span>
                     {% endif %}
         
-                </form>
+              
             </td>
 
         </tr>
