@@ -1,8 +1,7 @@
-"""
-URL configuration for Alora project.
+"""ALORA URL Configuration
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
+The urlpatterns list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/3.2/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -19,42 +18,47 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from aloraapp import views
-
+   
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('register/', views.register_view, name='register'),
+    path('',views.index,name='index'),  
+    path('login/', views.login_view, name='login'),  
+    path('logout/', views.logout_view, name='logout'),
+
+    path('home/',views.home,name='home'), 
+    path('profile/', views.profile_view, name='profile'),  
+    path('edit-profile/', views.edit_profile_view, name='edit_profile'),  
+    path('delete-profile/', views.delete_profile_view, name='delete_profile'),
+
+
+    path('admin', views.admin, name='admin'), 
+    path('viewusers',views.viewusers,name='viewusers'),
+    path('addhall',views.add_hall,name='addhall'),
+    path('adddetails',views.hall_details,name='halldetails'),
+    path('addfood',views.add_food,name='addfood'),
+    path('fooddetails',views.food_details,name='fooddetails'),
 
     path('resetpassword',views.password_reset_request,name='resetpassword'),
     path('verifyotp',views.verify_otp,name='verifyotp'),
     path('newpassword',views.set_new_password,name='newpassword'),
 
-    path('',views.index),
-    path('reg',views.user_registration,name='reg'),
-    path('log',views.user_login,name='log'),
-    path('logout',views.logout_view,name='logout'),
+    path('adddecoration',views.add_decoration,name='adddecoration'),
+    path('decorationdetails',views.decoration_details,name='decorationdetails'),
 
-
-    path('user',views.userhome,name='user'),
-    path('viewuser',views.profile,name='viewuser'),
-
-    path('edit',views.edit,name='edit'),
-
-    path('viewd',views.decoration_details,name='viewd'),
-    path('addd',views.add_decoration,name='addd'),
-
-    path('food',views.food,name='food'),
-    path('ad_fud',views.add_food,name='ad_fud'),
-
-    path('adminh',views.adminhome,name='adminh'),
-    path('admviewuser',views.viewusers,name='admviewuser'),
-    path('viewhall',views.viewhall,name='viewhall'),
-    path('addhall',views.addhall,name='addhall'),
-    
-    path('book',views.booking,name='book'),
-    path('userviewbooking',views.user_view_booking,name='userviewbooking'),
-    path('adminviewbooking',views.admin_view_booking,name='adminviewbooking'),
+    path('booking_page',views.booking_page,name='booking_page'),
+    path('booking_view',views.booking_view,name='booking_view'),
+    path('admin_view_booking',views.admin_view_booking,name='admin_view_booking'),
     path('acceptrejectbooking/<int:id>',views.accept_reject_booking,name='acceptrejectbooking'),
-    path('stripe_payments/<int:id>',views.stripe_payments,name='stripe_payments'),
-    path('payment_statuss/<int:id>',views.payment_statuss,name='payment_statuss'),
+
+    path('payment/<int:id>', views.stripe_payments, name='payment'),
+    path('payment_status/<int:id>',views.payment_status,name='payment_status'),
+
+    path('service',views.service,name='service'),
+    path('about',views.about,name='about'),
+    path('gallery',views.gallery,name='gallery'),
+    path('testimonials',views.testimonials,name='testimonials'),
 ]
 if settings.DEBUG:
-    urlpatterns +=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+    
+   urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

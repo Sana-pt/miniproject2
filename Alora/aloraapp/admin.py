@@ -6,7 +6,7 @@ from .models import *
 admin.site.register(User_details)
 admin.site.register(Halls)
 
-admin.site.register(Events)
+
 admin.site.register(Food)
 
 admin.site.register(Decoration)
