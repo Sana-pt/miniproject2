@@ -282,7 +282,7 @@ def booking_page(request):
         food_id=request.POST.get('food')                #paranthesis bcz it's optional
         decoration_id=request.POST.get('decoration')
         photography=request.POST.get('photography')
-        no_of_persons=int(request.POST['no_of_persons'])
+        no_of_people=int(request.POST['no_of_people'])
 
         hall=Halls.objects.get(id=hall_id)
         food=Food.objects.get(id=food_id)if food_id else None                           #fetch hall,food and decoration object
@@ -291,10 +291,10 @@ def booking_page(request):
         total_cost=0
         total_cost=hall.price_per_day
         if food:
-            total_cost +=food.food_price*no_of_persons
+            total_cost +=food.food_price*no_of_people
 
         if decoration:                                                      #Calculation of total price
-            total_cost +=decoration.decoration_price*no_of_persons
+            total_cost +=decoration.decoration_price*no_of_people
         
         if photography=='yes':
             total_cost +=photography_price
@@ -302,7 +302,7 @@ def booking_page(request):
         booking=Bookings.objects.create(event_date=event_date,user_id=request.user,hall_id=hall,food=food,
             decoration=decoration,
             photography_cost=photography_price if photography == 'yes' else 0,
-            no_of_persons=no_of_persons,
+            no_of_people=no_of_people,
             total_payment=total_cost,
             payment_status="pending",
         )
@@ -367,7 +367,7 @@ def stripe_payments(request, id):
         total_amount = data.total_payment
 
         intent = stripe.PaymentIntent.create(
-            amount=int(total_amount * 100),
+            amount=int(total_amount * 10),
             currency="usd",
             metadata={"data": data.id, "user_id": request.user.id},
         )

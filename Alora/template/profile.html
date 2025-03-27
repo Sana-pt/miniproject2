@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        /* General Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to right, #cfabab, #cfabab);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Profile Card */
+        .profile-container {
+            background: white;
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            display: flex;
+        }
+
+        .left-side {
+            width: 300px;
+            text-align: center;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+        }
+
+        .right-side {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .user-icon {
+            font-size: 60px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .user-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .user-email {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .settings-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="email"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .action-buttons a {
+            text-decoration: none;
+            background-color: #007bff;
+            color: white;
+            padding: 8px 12px; /* Smaller padding for smaller buttons */
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 14px; /* Smaller font size */
+            width: 120px; /* Uniform width for all buttons */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .action-buttons a:hover {
+            opacity: 0.9;
+        }
+
+        /* Specific style for the Logout button */
+        .action-buttons a.logout {
+            background-color: #ff0000; /* Red color */
+        }
+
+        .action-buttons a.logout:hover {
+            background-color: #cc0000; /* Darker red on hover */
+        }
+
+        /* Profile Details */
+        .profile-details p {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #333;
+            text-align: left;
+        }
+
+        .profile-details strong {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="left-side">
+            <div class="user-info">
+                <div class="user-icon">👤</div>
+                <div class="user-name">{{ user.username }}</div>
+                <div class="user-email">{{ user.email }}</div>
+            </div>
+        </div>
+        <div class="right-side">
+            <div class="settings-title">USER PROFILE</div>
+            <div class="profile-details">
+                {% if user_details %}
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Phone Number:</strong> {{ user_details.phone_number }}</p>
+                    <p><strong>Gender:</strong> {{ user_details.gender }}</p>
+                    <p><strong>Address:</strong> {{ user_details.address }}</p>
+                {% else %}
+                    <p>No profile details found.</p>
+                {% endif %}
+            </div>
+
+            <div class="action-buttons">
+                <a href="{% url 'edit_profile' %}">Edit Profile</a>
+                <a href="{% url 'booking_view' %}">View Bookings</a>
+                <a href="{% url 'booking_page' %}">booking page</a>
+                <a href="{% url 'logout' %}" class="logout">Logout</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>4
