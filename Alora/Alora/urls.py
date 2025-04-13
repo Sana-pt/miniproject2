@@ -1,6 +1,6 @@
 """ALORA URL Configuration
 
-The urlpatterns list routes URLs to views. For more information please see:
+The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
 Examples:
 Function views
@@ -40,7 +40,7 @@ urlpatterns = [
     path('delete-hall/<int:id>/', views.delete_hall, name='deletehall'),
 
     path('hall/<int:hall_id>/', views.hall_detail_view, name='hall_detail'),
-
+    
     path('adddetails',views.hall_details,name='halldetails'),
 
     path('addfood',views.add_food,name='addfood'),
@@ -54,11 +54,15 @@ urlpatterns = [
 
     path('adddecoration',views.add_decoration,name='adddecoration'),
     path('decorationdetails',views.decoration_details,name='decorationdetails'),
-    path('update_decoration',views.update_decoration,name=' updatedecoration'),
+    path('updatedecoration/<int:id>',views.update_decoration,name='updatedecoration'),
+    path('delete_decoration/<int:id>/', views.delete_decoration, name='delete_decoration'),
+
 
     path('booking_page',views.booking_page,name='booking_page'),
     path('booking_view',views.booking_view,name='booking_view'),
     path('admin_view_booking',views.admin_view_booking,name='admin_view_booking'),
+    path('booking_detail/<int:id>/', views.booking_detail, name='booking_detail'),
+    
     path('acceptrejectbooking/<int:id>',views.accept_reject_booking,name='acceptrejectbooking'),
 
     path('payment/<int:id>', views.stripe_payments, name='payment'),

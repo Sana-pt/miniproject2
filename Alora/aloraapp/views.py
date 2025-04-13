@@ -27,6 +27,7 @@ def register_view(request):
         password2 = request.POST['cpassword']
         gender=request.POST['gender']
         phonenumber=request.POST['phonenumber']
+        address=request.POST['address']
 
         if password1 != password2:
             context = {'error_message': 'Passwords do not match.'}
@@ -43,11 +44,12 @@ def register_view(request):
         if User_details.objects.filter(phone_number=phonenumber).exists():
             context = {'error_message': 'phone number not match.'}
             return render(request, 'register.html', context)
+        
 
         user = User.objects.create_user(first_name=name,username=username, email=email, password=password1)
         user.save()
 
-        user_details = User_details.objects.create(user_id=user,gender=gender,phone_number=phonenumber)
+        user_details = User_details.objects.create(user_id=user,gender=gender,phone_number=phonenumber,address=address)
         user_details.save()
 
         context = {'success_message': 'Account created successfully. Please log in.'}
@@ -162,8 +164,8 @@ def add_hall(request):
     else:
         return render(request,'add_hall.html')
     
-#new requirements................................................................................................................................................
-    
+
+#new requirements...........................................................................................
 def edit_hall(request, id):
     hall = Halls.objects.get(id=id)
     
@@ -199,6 +201,8 @@ def hall_detail_view(request, hall_id):
     return render(request, 'view_hall_detail.html', {'hall': hall})
 
 
+
+    
 def food_details(request):
     data=Food.objects.all()
     return render(request,'food_details.html',{'data':data})
@@ -215,6 +219,7 @@ def add_food(request):
     else:
         return render(request,'add_food.html')
     
+
 #new requirements..........................................................................
 @login_required(login_url='login')
 def update_food(request, food_id):
@@ -243,7 +248,10 @@ def delete_food(request, food_id):
         messages.success(request, "Food item deleted successfully!")
         return redirect('fooddetails')
     return render(request, 'delete_food.html', {'food': food})
-    
+
+
+
+
  #PASSWORDS
 
 def send_otp(email):
@@ -334,8 +342,6 @@ def add_decoration(request):
         return redirect(decoration_details)
     return render(request,'add_decoration.html')
 
-
-
 #newrequirements...............................................................................
 
 @login_required(login_url='login')
@@ -361,6 +367,23 @@ def update_decoration(request, id):
     context = {'decoration': decoration}
     return render(request, 'update_decoration.html', context)
 
+
+@login_required(login_url='login')
+def delete_decoration(request, id):
+    if not request.user.is_staff:
+        messages.error(request, "You are not authorized to perform this action.")
+        return redirect('admin')
+
+    decoration = get_object_or_404(Decoration, id=id)
+    
+    if request.method == 'POST':
+        decoration.delete()
+        messages.success(request, "Decoration deleted successfully!")
+        return redirect('decorationdetails')
+    
+    context = {'decoration': decoration}
+    return render(request, 'delete_decoration.html', context)
+
 #BOOKINGS................................................................
 
 @login_required(login_url='login')
@@ -376,7 +399,7 @@ def booking_page(request):
         food_id=request.POST.get('food')                #paranthesis bcz it's optional
         decoration_id=request.POST.get('decoration')
         photography=request.POST.get('photography')
-        no_of_people=int(request.POST['no_of_people'])
+        no_of_persons=int(request.POST['no_of_persons'])
 
         hall=Halls.objects.get(id=hall_id)
         food=Food.objects.get(id=food_id)if food_id else None                           #fetch hall,food and decoration object
@@ -385,10 +408,10 @@ def booking_page(request):
         total_cost=0
         total_cost=hall.price_per_day
         if food:
-            total_cost +=food.food_price*no_of_people
+            total_cost +=food.food_price*no_of_persons
 
         if decoration:                                                      #Calculation of total price
-            total_cost +=decoration.decoration_price*no_of_people
+            total_cost +=decoration.decoration_price*no_of_persons
         
         if photography=='yes':
             total_cost +=photography_price
@@ -396,7 +419,7 @@ def booking_page(request):
         booking=Bookings.objects.create(event_date=event_date,user_id=request.user,hall_id=hall,food=food,
             decoration=decoration,
             photography_cost=photography_price if photography == 'yes' else 0,
-            no_of_people=no_of_people,
+            no_of_persons=no_of_persons,
             total_payment=total_cost,
             payment_status="pending",
         )
@@ -426,6 +449,23 @@ def booking_view(request):
         'user':user
     } 
      return render(request, 'booking_view.html', context)
+
+@login_required(login_url='login')
+def booking_detail(request, id):
+    booking = get_object_or_404(
+        Bookings.objects.select_related('user_id', 'hall_id', 'food', 'decoration'), 
+        id=id
+    )
+
+    if not request.user.is_staff and booking.user_id != request.user:
+        messages.error(request, "You are not authorized to view this booking.")
+        return redirect('home')
+    
+    context = {
+        'booking': booking,
+    }
+    return render(request, 'bookingdetail.html', context)
+
 
 #...............ADMIN.....................
 
@@ -461,7 +501,7 @@ def stripe_payments(request, id):
         total_amount = data.total_payment
 
         intent = stripe.PaymentIntent.create(
-            amount=int(total_amount * 10),
+            amount=int(total_amount * 100),
             currency="usd",
             metadata={"data": data.id, "user_id": request.user.id},
         )
@@ -497,14 +537,19 @@ def payment_status(request, id):
     messages.success(request, "Payment completed successfully!")
     return render(request, 'payment_status.html')
 
+@login_required(login_url='login')
 def service(request):
     return render(request,'service.html')
 
+@login_required(login_url='login')
 def about(request):
     return render(request,'aboutus.html')
 
+@login_required(login_url='login')
 def gallery(request):
     return render(request,'gallery.html')
 
+@login_required(login_url='login')
 def testimonials(request):
     return render(request,'testimonials.html')
+ 
